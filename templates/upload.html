@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+    <title>Upload Dataset</title>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h1 class="card-title"><i class="fas fa-upload"></i> Upload Dataset</h1>
+            </div>
+            <div class="card-body">
+                <form action="/train" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label"><i class="fas fa-file-csv"></i> Upload CSV File:</label>
+                        <input type="file" class="form-control" name="file" accept=".csv" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="target_column" class="form-label"><i class="fas fa-bullseye"></i> Target Column:</label>
+                        <select class="form-select" name="target_column" required>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hyperparameter_tuning" class="form-label"><i class="fas fa-cogs"></i> Perform Hyperparameter Tuning:</label>
+                        <select class="form-select" name="hyperparameter_tuning" required>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-play"></i> Train Models</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('input[name="file"]').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const headers = text.split('\n')[0].split(',').map(header => header.trim());
+                const select = document.querySelector('select[name="target_column"]');
+                select.innerHTML = headers.map(header => 
+                    `<option value="${header}">${header}</option>`
+                ).join('');
+            };
+            reader.readAsText(file);
+        });
+    </script>
+</body>
+</html>
