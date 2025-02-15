@@ -198,30 +198,6 @@ async def predict_page(request: Request):
         return templates.TemplateResponse("error.html", {"request": request, "error": "No model trained yet."})
     return templates.TemplateResponse("predict.html", {"request": request, "feature_columns": feature_columns})
 
-# @app.post("/predict", response_class=HTMLResponse)
-# async def make_prediction(
-#     request: Request,
-#     form_data: dict = Depends(Request.form)
-# ):
-#     global best_model, feature_columns
-
-#     if not best_model:
-#         return templates.TemplateResponse("error.html", {"request": request, "error": "No model trained yet."})
-
-#     # Parse form data
-#     data = await form_data.form()
-#     input_data = {col: float(data[col]) for col in feature_columns}
-
-#     # Convert input data to DataFrame
-#     input_df = pd.DataFrame([input_data])
-
-#     # Make predictions
-#     prediction = best_model.predict(input_df)
-
-#     return templates.TemplateResponse(
-#         "predict_results.html",
-#         {"request": request, "prediction": prediction[0]},
-#     )
 @app.post("/predict", response_class=HTMLResponse)
 async def make_prediction(
     request: Request
